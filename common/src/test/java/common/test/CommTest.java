@@ -2,15 +2,16 @@ package common.test;
 
 
 import java.util.List;
+import java.util.Properties;
 
 import org.junit.Test;
 
-
+import com.happymail.common.util.Config;
 import com.happymail.common.util.JsonUtil;
+import com.happymail.common.util.PropertiesUtil;
 
 public class CommTest
 {
-	@Test
 	public void jsonTest()
 	{
 //		User user=new User(1,"test","123456",new Date());
@@ -30,5 +31,14 @@ public class CommTest
 		String jsonText="[{\"id\":1,\"name\":\"teacher\",\"users\":[{\"id\":2,\"name\":\"test2\",\"password\":\"123456\",\"registedDate\":1527257836804},{\"id\":1,\"name\":\"test\",\"password\":\"123456\",\"registedDate\":1527257836804}]},{\"id\":2,\"name\":\"teacher2\",\"users\":[{\"$ref\":\"$[0].users[0]\"},{\"$ref\":\"$[0].users[1]\"}]}]";
 		List<Teacher> teachers=JsonUtil.ToList(jsonText, Teacher.class);
 		System.out.println(teachers.size());
+	}
+	@Test
+	public void propertiesTest()
+	{
+		//Properties pop = new Properties();
+		//pop.setProperty("user.name", "testNew");
+		//PropertiesUtil.updateProperties(pop, Config.PropertiesConfig.DEFAULT_PROPERTIES_FILE);
+		String name=PropertiesUtil.getProperty("user.name");
+		System.out.println(name);
 	}
 }

@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE generatorConfiguration PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN" "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd" >
+<generatorConfiguration>
+    <!-- 数据库配置文件 -->
+    <properties resource="jdbc.properties" />
+    
+    <context id="context1">
+        <property name="javaFileEncoding" value="UTF-8" />
+        <property name="autoDelimitKeywords" value="true" />
+        <property name="javaFormatter" value="org.mybatis.generator.api.dom.DefaultJavaFormatter" />
+        <property name="xmlFormatter" value="org.mybatis.generator.api.dom.DefaultXmlFormatter" />
+        
+         <!--去除注释  -->
+        <commentGenerator>
+            <property name="suppressAllComments" value="true" />
+        </commentGenerator>
+        <!-- 数据库连接 -->
+        <jdbcConnection driverClass="${driverClass}" connectionURL="${jdbcUrl}" userId="${user}" password="${password}" />
+
+        <!-- 数据库的生成配置 -->
+        <javaModelGenerator targetPackage="learn.web.bean" targetProject="portal/src/main/java" />
+        <sqlMapGenerator targetPackage="learn.web.mapper" targetProject="portal/src/main/java" />
+        <javaClientGenerator targetPackage="learn.web.dao" targetProject="portal/src/main/java" type="XMLMAPPER" />
+        
+        <!-- 以上部分配置固定，无需改动，此处往下开始项目设置 -->
+        
+        <!-- user表 -->
+        <table tableName="t_student" domainObjectName="Student" enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false"
+    enableSelectByExample="false" selectByExampleQueryId="false" mapperName="StudentDao">
+            <property name="useActualColumnNames" value="true" />
+            <!-- <generatedKey column="id" sqlStatement="SELECT LAST_INSERT_ID()" identity="true" /> -->
+        </table>
+<!--         Account表
+        <table tableName="Account" domainObjectName="Account">
+            <property name="useActualColumnNames" value="true" />
+            <generatedKey column="id" sqlStatement="SELECT LAST_INSERT_ID()" identity="true" />
+        </table>
+        qbank表
+        <table tableName="Qbank" domainObjectName="Qbank">
+            <property name="useActualColumnNames" value="true" />
+            <generatedKey column="id" sqlStatement="SELECT LAST_INSERT_ID()" identity="true" />
+        </table>
+        Questionfiles表
+        <table tableName="Questionfiles" domainObjectName="Questionfiles">
+            <property name="useActualColumnNames" value="true" />
+            <generatedKey column="id" sqlStatement="SELECT LAST_INSERT_ID()" identity="true" />
+        </table>
+        TestRecord表
+        <table tableName="TestRecord" domainObjectName="TestRecord">
+            <property name="useActualColumnNames" value="true" />
+            <generatedKey column="id" sqlStatement="SELECT LAST_INSERT_ID()" identity="true" />
+        </table>
+        EvaludateScore表
+        <table tableName="EvaludateScore" domainObjectName="EvaludateScore">
+            <property name="useActualColumnNames" value="true" />
+            <generatedKey column="id" sqlStatement="SELECT LAST_INSERT_ID()" identity="true" />
+        </table>
+        TestAdvice表
+        <table tableName="TestAdvice" domainObjectName="TestAdvice">
+            <property name="useActualColumnNames" value="true" />
+            <generatedKey column="id" sqlStatement="SELECT LAST_INSERT_ID()" identity="true" />
+        </table> -->
+    </context>
+</generatorConfiguration>

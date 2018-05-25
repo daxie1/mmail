@@ -1,0 +1,47 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>com.happay.mail</groupId>
+    <artifactId>mmail</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+  </parent>
+  <artifactId>portal</artifactId>
+  <packaging>war</packaging>
+  
+  <properties>
+  <freemarker-version>2.3.28</freemarker-version>
+  </properties>
+  <!-- dependencies start -->
+  <dependencies>
+       <dependency>
+    <groupId>org.freemarker</groupId>
+    <artifactId>freemarker</artifactId>
+    <version>${freemarker-version}</version>
+   </dependency>
+		<dependency>
+			<groupId>javax.servlet</groupId>
+			<artifactId>javax.servlet-api</artifactId>
+			<version>3.1.0</version>
+			<scope>provided</scope>
+		</dependency>
+  </dependencies>
+  <!-- dependencies end -->
+  <!-- 环境隔离 -->
+    <profiles>
+    <profile>
+        <id>dev</id>
+        <activation>
+            <activeByDefault>true</activeByDefault>
+        </activation>
+        <properties>
+            <deploy.envtype>dev</deploy.envtype>
+        </properties>
+    </profile>
+    <profile>
+        <id>pro</id>
+        <properties>
+            <deploy.envtype>pro</deploy.envtype>
+        </properties>
+    </profile>
+</profiles>
+</project>

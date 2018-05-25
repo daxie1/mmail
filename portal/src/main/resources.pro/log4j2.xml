@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="OFF" monitorInterval="1800">
+    <properties>
+        <property name="LOG_HOME">C:/logs</property>
+        <property name="FILE_NAME">run-log</property>
+        <property name="SQL_LOG_NAME">sql-log</property>
+    </properties>
+
+
+    <Appenders>
+        <RollingFile name="running-log" fileName="${LOG_HOME}/${FILE_NAME}.log"
+            filePattern="${LOG_HOME}/$${date:yyyy-MM}/${FILE_NAME}-%d{yyyy-MM-dd}-%i.log.gz"
+            immediateFlush="true">
+            <PatternLayout
+                pattern="%date{yyyy-MM-dd HH:mm:ss.SSS} %level [%thread][%file:%line] - %msg%n" />
+            <Policies>
+                <TimeBasedTriggeringPolicy />
+                <SizeBasedTriggeringPolicy size="10 MB" />
+            </Policies>
+            <DefaultRolloverStrategy max="20" />
+        </RollingFile>
+        <!-- sql -->
+        <RollingFile name="sql-log" fileName="${LOG_HOME}/${SQL_LOG_NAME}.log"
+            filePattern="${LOG_HOME}/$${date:yyyy-MM}/${FILE_NAME}-%d{yyyy-MM-dd}-%i.log.gz"
+            immediateFlush="true">
+            <PatternLayout
+                pattern="%date{yyyy-MM-dd HH:mm:ss.SSS} %level [%thread][%file:%line] - %msg%n" />
+            <Policies>
+                <TimeBasedTriggeringPolicy />
+                <SizeBasedTriggeringPolicy size="10 MB" />
+            </Policies>
+            <DefaultRolloverStrategy max="20" />
+        </RollingFile>
+    </Appenders>
+    <Loggers>
+        <Root level="error">
+               <!-- 这里是输入到文件，很重要-->
+            <AppenderRef ref="running-log" />
+        </Root>
+        <!-- 配置 sql语句日志打印-->
+    <Logger name="learn.web.dao" level="TRACE" additivity="false">
+      <AppenderRef ref="sql-log"/>  
+    </Logger> 
+    </Loggers>
+</Configuration>

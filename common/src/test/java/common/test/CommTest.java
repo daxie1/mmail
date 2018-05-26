@@ -2,14 +2,16 @@ package common.test;
 
 
 import java.util.List;
-import java.util.Properties;
+
 
 import org.junit.Test;
 
-import com.happymail.common.util.Config;
 import com.happymail.common.util.JsonUtil;
 import com.happymail.common.util.PropertiesUtil;
 
+import lombok.extern.log4j.Log4j2;
+
+@Log4j2
 public class CommTest
 {
 	public void jsonTest()
@@ -39,6 +41,7 @@ public class CommTest
 		//pop.setProperty("user.name", "testNew");
 		//PropertiesUtil.updateProperties(pop, Config.PropertiesConfig.DEFAULT_PROPERTIES_FILE);
 		String name=PropertiesUtil.getProperty("user.name");
+		log.error("log text");
 		System.out.println(name);
 	}
 }

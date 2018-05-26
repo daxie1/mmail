@@ -135,8 +135,14 @@
   		<artifactId>javax.servlet-api</artifactId>
   		<version>3.1.0</version>
   	</dependency>
+  	<!-- redis client -->
+  	<dependency>
+    <groupId>redis.clients</groupId>
+    <artifactId>jedis</artifactId>
+    <version>2.9.0</version>
+</dependency>
   </dependencies>
-<!-- dependencies start -->
+<!-- dependencies end -->
   <!-- build  start-->
     <build>
   <plugins>    

@@ -18,17 +18,17 @@
         <jdbcConnection driverClass="${driverClass}" connectionURL="${jdbcUrl}" userId="${user}" password="${password}" />
 
         <!-- 数据库的生成配置 -->
-        <javaModelGenerator targetPackage="learn.web.bean" targetProject="portal/src/main/java" />
-        <sqlMapGenerator targetPackage="learn.web.mapper" targetProject="portal/src/main/java" />
-        <javaClientGenerator targetPackage="learn.web.dao" targetProject="portal/src/main/java" type="XMLMAPPER" />
+        <javaModelGenerator targetPackage="com.happymail.common.bean" targetProject="common/src/main/java" />
+        <sqlMapGenerator targetPackage="com.happymail.mapper" targetProject="service/src/main/java" />
+        <javaClientGenerator targetPackage="com.happymail.dao" targetProject="service/src/main/java" type="XMLMAPPER" />
         
         <!-- 以上部分配置固定，无需改动，此处往下开始项目设置 -->
         
         <!-- user表 -->
-        <table tableName="t_student" domainObjectName="Student" enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false"
-    enableSelectByExample="false" selectByExampleQueryId="false" mapperName="StudentDao">
-            <property name="useActualColumnNames" value="true" />
-            <!-- <generatedKey column="id" sqlStatement="SELECT LAST_INSERT_ID()" identity="true" /> -->
+<table tableName="t_user" domainObjectName="User" enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false"
+    enableSelectByExample="false" selectByExampleQueryId="false" enableSelectByPrimaryKey="true" mapperName="UserDao">
+             <!-- property name="useActualColumnNames" value="true" /> 使用驼峰命令 -->
+             <generatedKey column="id" sqlStatement="SELECT LAST_INSERT_ID()" identity="true" />
         </table>
 <!--         Account表
         <table tableName="Account" domainObjectName="Account">

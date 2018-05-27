@@ -81,7 +81,7 @@
    <dependency>
     <groupId>mysql</groupId>
     <artifactId>mysql-connector-java</artifactId>
-    <version>8.0.11</version>
+    <version>5.1.40</version>
 </dependency>
 <dependency>
     <groupId>org.mybatis</groupId>
@@ -141,6 +141,12 @@
     <artifactId>jedis</artifactId>
     <version>2.9.0</version>
 </dependency>
+<!-- 数据验证 -->
+<dependency>
+    <groupId>org.hibernate</groupId>
+    <artifactId>hibernate-validator</artifactId>
+    <version>5.4.1.Final</version>
+</dependency>
   </dependencies>
 <!-- dependencies end -->
   <!-- build  start-->
@@ -189,6 +195,12 @@
 			<version>3.1.0</version>
 			<scope>provided</scope>
 		</dependency>
+		<!-- 数据验证 -->
+	<dependency>
+    <groupId>org.hibernate</groupId>
+    <artifactId>hibernate-validator</artifactId>
+    <version>5.4.1.Final</version>
+      </dependency>
     </dependencies>
 </plugin>
     </plugins>
@@ -213,5 +225,6 @@
   <modules>
   	<module>portal</module>
   	<module>Common</module>
+  	<module>service</module>
   </modules>
 </project>

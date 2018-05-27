@@ -12,6 +12,13 @@
 
 <context:component-scan base-package="com.happymail.controller"/>
 <mvc:default-servlet-handler/>
+<!-- 使用数据校验框架进行数据校验 -->
+<!-- 注册验证器 -->
+<mvc:annotation-driven validator="validator" />
+<bean id="validator" class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean">
+<property name="providerClass" value="org.hibernate.validator.HibernateValidator" />
+        <!-- 这里配置将使用上面国际化配置的messageSource -->
+</bean>
 <!-- 使用freemarker还需要基本配置 -->
 <bean id="freemarkerConfig"  
         class="org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer"> 

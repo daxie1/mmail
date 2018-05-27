@@ -44,12 +44,12 @@ public class CookieUtil
     /**
      *  获取 cookie  
      */
-    public static String getCookie(HttpServletRequest request, String cookieName) {  
+    public static Cookie getCookie(HttpServletRequest request, String cookieName) {  
         Cookie[] cookies = request.getCookies();  
         if (cookies != null) {  
             for (Cookie cookie : cookies) {  
                 if (cookieName.equalsIgnoreCase(cookie.getName())) {  
-                    return cookie.getValue();  
+                    return cookie;  
                 }  
             }  
         }  

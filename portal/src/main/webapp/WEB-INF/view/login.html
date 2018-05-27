@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>用户登录</title>
+<link rel="stylesheet" href="/portal/layui/css/layui.css">
+<script type="text/javascript" src="/portal/js/jquery-3.3.1.min.js"></script>
+<script type="text/javascript" src="/portal/js/app.js"></script>
+<script src="/portal/layui/layui.all.js"></script>
+<style>
+.login-body
+{
+margin-top: 10%
+}
+</style>
+</head>
+<body class="login-body">
+<div class="layui-container">  
+  <div class="layui-row">
+    <div class="layui-col-md9  layui-col-md-offset4">
+      <h1>用户登录</h1>
+    </div>
+  </div>
+  <div class="layui-row">
+  <div class="layui-col-md4 layui-col-md-offset2">
+        <form class="layui-form" action="">
+  <div class="layui-form-item">
+    <label class="layui-form-label">用户名</label>
+    <div class="layui-input-block">
+      <input type="text" name="username" required  lay-verify="required" placeholder="请输入用户名" autocomplete="off" class="layui-input">
+    </div>
+  </div>
+  <div class="layui-form-item">
+    <label class="layui-form-label">密码</label>
+    <div class="layui-input-inline">
+      <input type="password" name="password" required lay-verify="required" placeholder="请输入密码" autocomplete="off" class="layui-input">
+    </div>
+  </div>
+  <div class="layui-form-item">
+    <label class="layui-form-label">记住我</label>
+    <div class="layui-input-block">
+      <input type="checkbox" name="rember" lay-skin="switch">
+    </div>
+  </div>
+  <div class="layui-form-item">
+    <div class="layui-input-block">
+      <button class="layui-btn" lay-submit lay-filter="formlogin" type="button">登录</button>
+      <button type="button" class="layui-btn layui-btn-primary">忘记密码</button>
+    </div>
+  </div>
+</form>
+  </div>
+  </div>
+</div>
+
+<script type="text/javascript">
+$(function(){
+	 var form = layui.form;
+	 form.render(); 
+	 form.on('submit(formlogin)', function(data){
+		 //layui.msg(JSON.stringify(data.field));
+		 ajaxPost("/portal/doLogin",data.field,function(result){layer.msg(result.message);})
+		 return false;
+		});
+});
+</script>
+</body>
+</html>

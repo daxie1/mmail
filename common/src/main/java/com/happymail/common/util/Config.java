@@ -31,7 +31,7 @@ public class Config
 		 * ".happymail.com"
 		 * Domian
 		 */
-		String DEFAULT_DOMAIN=".happymail.com";
+		String DEFAULT_DOMAIN="happymail.com";
 		/**
 		 *60*60*24*365
 		 *一年 
@@ -42,5 +42,9 @@ public class Config
 		 * 保存路径
 		 */
 		String DEAULT_PATH="/";
+	}
+	public static interface UserConfig
+	{
+		String USER_COOKIE_KEY="user_info";
 	}
 }

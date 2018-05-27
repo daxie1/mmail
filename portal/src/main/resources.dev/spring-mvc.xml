@@ -15,7 +15,7 @@
 <!-- 使用freemarker还需要基本配置 -->
 <bean id="freemarkerConfig"  
         class="org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer"> 
-        <property name="templateLoaderPath" value="" />  
+        <property name="templateLoaderPath" value=""/>  
         <property name="freemarkerSettings">  
             <props>  
                 <prop key="template_update_delay">0</prop>  
@@ -30,7 +30,7 @@
 <bean class="org.springframework.web.servlet.view.freemarker.FreeMarkerViewResolver">
         <property name="cache" value="true" />  
         <property name="prefix" value="/WEB-INF/view/" />
-        <property name="suffix" value=".ftl"/>  
+        <property name="suffix" value=".html"/>  
         <property name="contentType" value="text/html;charset=UTF-8"></property>  
         <property name="requestContextAttribute" value="request" />  
         <property name="exposeSpringMacroHelpers" value="true" />  

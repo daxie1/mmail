@@ -51,7 +51,7 @@ public class IndexController
 	}
 	@RequestMapping(value="/doLogin",method= {RequestMethod.POST})
 	@ResponseBody
-	public ServiceResponse doLogin(String username,String password,HttpServletRequest request,HttpServletResponse response)
+	public ServiceResponse doLogin(@RequestParam("username")String username,@RequestParam("password")String password,HttpServletRequest request,HttpServletResponse response)
 	{
 		ServiceResponse serviceResponse=new ServiceResponse();
 		Cookie cookie=CookieUtil.getCookie(request, Config.UserConfig.USER_COOKIE_KEY);

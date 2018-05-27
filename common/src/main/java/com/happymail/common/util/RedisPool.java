@@ -36,7 +36,7 @@ public class RedisPool
 			config.setTimeBetweenEvictionRunsMillis(Integer.parseInt(properties.getProperty("redis.pool.timeBetweenEvictionRunsMillis")));
 			
 			
-			jedisPool=new JedisPool(config,properties.getProperty("redis.ip"),Integer.parseInt(properties.getProperty("redis.port")),Integer.parseInt(properties.getProperty("redis.timeout")));
+			jedisPool=new JedisPool(config,properties.getProperty("redis.ip"),Integer.parseInt(properties.getProperty("redis.port")));
 		}catch (Exception e) {
 			log.error("init jedis pool errr {}", e.getMessage(), e);
 		}

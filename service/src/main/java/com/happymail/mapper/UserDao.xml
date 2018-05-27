@@ -32,7 +32,7 @@
          AND username=#{username,jdbcType=VARCHAR}
       </if>
       <if test="password != null">
-        password=#{password,jdbcType=VARCHAR}
+        AND password=#{password,jdbcType=VARCHAR}
       </if>
       <if test="registedDate!= null">
         AND registed_date=#{registedDate,jdbcType=DATE}

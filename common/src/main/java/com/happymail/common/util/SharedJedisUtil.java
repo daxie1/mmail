@@ -5,21 +5,20 @@ import java.util.Map;
 import java.util.Set;
 
 import lombok.extern.log4j.Log4j2;
+import redis.clients.jedis.ShardedJedis;
+import redis.clients.jedis.ShardedJedisPool;
 import redis.clients.jedis.BinaryClient.LIST_POSITION;
-import redis.clients.jedis.Jedis;
-import redis.clients.jedis.JedisPool;
 
 /**
- * jedisUtil
- * jedis操作进一步封装
+ * 分片的jedis帮助类
  * @author yu
  *
  */
 @Log4j2
-public  class JedisUtil
+public class SharedJedisUtil
 {
-	public static  JedisPool pool=RedisPool.getJedisPool();
-    /**
+	public static  ShardedJedisPool pool=SharedRedisPool.getJedisPool();
+	   /**
      * <p>通过key获取储存在redis中的value</p>
      * <p>并释放连接</p>
      * @param key
@@ -27,7 +26,7 @@ public  class JedisUtil
      */
     public static String get(String key)
     {
-        Jedis jedis = null;
+        ShardedJedis jedis = null;
         String value = null;
         try {
             jedis = pool.getResource();
@@ -48,7 +47,7 @@ public  class JedisUtil
      * @return 成功 返回OK 失败返回 0
      */
     public static String set(String key,String value){
-        Jedis jedis = null;
+        ShardedJedis jedis = null;
         try {
             jedis = pool.getResource();
             return jedis.set(key, value);
@@ -65,8 +64,8 @@ public  class JedisUtil
      * @param keys 一个key  也可以使 string 数组
      * @return 返回删除成功的个数
      */
-    public static Long del(String...keys){
-        Jedis jedis = null;
+    public static Long del(String keys){
+        ShardedJedis jedis = null;
         try {
             jedis = pool.getResource();
             return jedis.del(keys);
@@ -85,7 +84,7 @@ public  class JedisUtil
      * @return 成功返回 添加后value的长度 失败 返回 添加的 value 的长度  异常返回0L
      */
     public static  Long append(String key ,String str){
-        Jedis jedis = null;
+        ShardedJedis jedis = null;
         Long res = null;
         try {
             jedis = pool.getResource();
@@ -104,7 +103,7 @@ public  class JedisUtil
      * @return true OR false
      */
     public static Boolean exists(String key){
-        Jedis jedis = null;
+        ShardedJedis jedis = null;
         try {
             jedis = pool.getResource();
             return jedis.exists(key);
@@ -124,7 +123,7 @@ public  class JedisUtil
      * @return 成功返回1 如果存在 和 发生异常 返回 0
      */
     public static Long setnx(String key ,String value){
-        Jedis jedis = null;
+        ShardedJedis jedis = null;
         try {
             jedis = pool.getResource();
             return jedis.setnx(key, value);
@@ -144,7 +143,7 @@ public  class JedisUtil
      * @return 成功返回OK 失败和异常返回null
      */
 	public static String setex(String key,String value,int seconds){
-        Jedis jedis = null;
+        ShardedJedis jedis = null;
         String res = null;
         try {
             jedis = pool.getResource();
@@ -173,7 +172,7 @@ public  class JedisUtil
      * @return 返回替换后  value 的长度
      */
     public static Long setrange(String key,String str,int offset){
-        Jedis jedis = null;
+        ShardedJedis jedis = null;
         try {
             jedis = pool.getResource();
             return jedis.setrange(key, offset, str);
@@ -184,67 +183,6 @@ public  class JedisUtil
             jedis.close();
         }
     }
-    /**
-     * <p>通过批量的key获取批量的value</p>
-     * @param keys string数组 也可以是一个key
-     * @return 成功返回value的集合, 失败返回null的集合 ,异常返回空
-     */
-    public static List<String> mget(String...keys){
-        Jedis jedis = null;
-        List<String> values = null;
-        try {
-            jedis = pool.getResource();
-            values = jedis.mget(keys);
-        } catch (Exception e) {
-
-            log.error(e.getMessage(),e);
-        } finally {
-            jedis.close();
-        }
-        return values;
-    }
-    /**
-     * <p>批量的设置key:value,可以一个</p>
-     * <p>example:</p>
-     * <p>  obj.mset(new String[]{"key2","value1","key2","value2"})</p>
-     * @param keysvalues
-     * @return 成功返回OK 失败 异常 返回 null
-     *
-     */
-    public static String mset(String...keysvalues){
-        Jedis jedis = null;
-        String res = null;
-        try {
-            jedis = pool.getResource();
-            res = jedis.mset(keysvalues);
-        } catch (Exception e) {
-            log.error(e.getMessage(),e);
-        } finally {
-            jedis.close();
-        }
-        return res;
-    }
-    /**
-     * <p>批量的设置key:value,可以一个,如果key已经存在则会失败,操作会回滚</p>
-     * <p>example:</p>
-     * <p>  obj.msetnx(new String[]{"key2","value1","key2","value2"})</p>
-     * @param keysvalues
-     * @return 成功返回1 失败返回0
-     */
-    public static Long msetnx(String...keysvalues){
-        Jedis jedis = null;
-        Long res = 0L;
-        try {
-            jedis = pool.getResource();
-            res =jedis.msetnx(keysvalues);
-        } catch (Exception e) {
-
-            log.error(e.getMessage(),e);
-        } finally {
-            jedis.close();
-        }
-        return res;
-    }
 
     
     /**
@@ -254,7 +192,7 @@ public  class JedisUtil
      * @return 旧值 如果key不存在 则返回null
      */
     public static String getset(String key,String value){
-        Jedis jedis = null;
+        ShardedJedis jedis = null;
         String res = null;
         try {
             jedis = pool.getResource();
@@ -276,7 +214,7 @@ public  class JedisUtil
      * @return 如果没有返回null
      */
     public static String getrange(String key, int startOffset ,int endOffset){
-        Jedis jedis = null;
+        ShardedJedis jedis = null;
         String res = null;
         try {
             jedis = pool.getResource();
@@ -296,7 +234,7 @@ public  class JedisUtil
      * @return 加值后的结果
      */
     public static Long incr(String key){
-        Jedis jedis = null;
+        ShardedJedis jedis = null;
         Long res = null;
         try {
             jedis = pool.getResource();
@@ -317,7 +255,7 @@ public  class JedisUtil
      * @return
      */
     public static Long incrBy(String key,Long integer){
-        Jedis jedis = null;
+        ShardedJedis jedis = null;
         Long res = null;
         try {
             jedis = pool.getResource();
@@ -337,7 +275,7 @@ public  class JedisUtil
      * @return
      */
     public static Long decr(String key) {
-        Jedis jedis = null;
+        ShardedJedis jedis = null;
         Long res = null;
         try {
             jedis = pool.getResource();
@@ -358,7 +296,7 @@ public  class JedisUtil
      * @return
      */
     public static Long decrBy(String key,Long integer){
-        Jedis jedis = null;
+        ShardedJedis jedis = null;
         Long res = null;
         try {
             jedis = pool.getResource();
@@ -378,7 +316,7 @@ public  class JedisUtil
      * @return 失败返回null
      */
     public static Long serlen(String key){
-        Jedis jedis = null;
+        ShardedJedis jedis = null;
         Long res = null;
         try {
             jedis = pool.getResource();
@@ -400,7 +338,7 @@ public  class JedisUtil
      * @return 如果存在返回0 异常返回null
      */
     public static Long hset(String key,String field,String value) {
-        Jedis jedis = null;
+        ShardedJedis jedis = null;
         Long res = null;
         try {
             jedis = pool.getResource();
@@ -422,7 +360,7 @@ public  class JedisUtil
      * @return
      */
     public static Long hsetnx(String key,String field,String value){
-        Jedis jedis = null;
+        ShardedJedis jedis = null;
         Long res = null;
         try {
             jedis = pool.getResource();
@@ -443,7 +381,7 @@ public  class JedisUtil
      * @return 返回OK 异常返回null
      */
     public static String hmset(String key,Map<String, String> hash){
-        Jedis jedis = null;
+        ShardedJedis jedis = null;
         String res = null;
         try {
             jedis = pool.getResource();
@@ -464,7 +402,7 @@ public  class JedisUtil
      * @return 没有返回null
      */
     public static String hget(String key, String field){
-        Jedis jedis = null;
+        ShardedJedis jedis = null;
         String res = null;
         try {
             jedis = pool.getResource();
@@ -485,7 +423,7 @@ public  class JedisUtil
      * @return
      */
     public static List<String> hmget(String key,String...fields){
-        Jedis jedis = null;
+        ShardedJedis jedis = null;
         List<String> res = null;
         try {
             jedis = pool.getResource();
@@ -507,7 +445,7 @@ public  class JedisUtil
      * @return
      */
     public static Long hincrby(String key ,String field ,Long value){
-        Jedis jedis = null;
+        ShardedJedis jedis = null;
         Long res = null;
         try {
             jedis = pool.getResource();
@@ -528,7 +466,7 @@ public  class JedisUtil
      * @return
      */
     public static Boolean hexists(String key , String field){
-        Jedis jedis = null;
+        ShardedJedis jedis = null;
         Boolean res = false;
         try {
             jedis = pool.getResource();
@@ -548,7 +486,7 @@ public  class JedisUtil
      * @return
      */
     public static Long hlen(String key){
-        Jedis jedis = null;
+        ShardedJedis jedis = null;
         Long res = null;
         try {
             jedis = pool.getResource();
@@ -570,7 +508,7 @@ public  class JedisUtil
      * @return
      */
     public static Long hdel(String key ,String...fields){
-        Jedis jedis = null;
+        ShardedJedis jedis = null;
         Long res = null;
         try {
             jedis = pool.getResource();
@@ -590,7 +528,7 @@ public  class JedisUtil
      * @return
      */
     public static Set<String> hkeys(String key){
-        Jedis jedis = null;
+        ShardedJedis jedis = null;
         Set<String> res = null;
         try {
             jedis = pool.getResource();
@@ -610,7 +548,7 @@ public  class JedisUtil
      * @return
      */
     public static List<String> hvals(String key){
-        Jedis jedis = null;
+        ShardedJedis jedis = null;
         List<String> res = null;
         try {
             jedis = pool.getResource();
@@ -630,7 +568,7 @@ public  class JedisUtil
      * @return
      */
     public static Map<String, String> hgetall(String key){
-        Jedis jedis = null;
+        ShardedJedis jedis = null;
         Map<String, String> res = null;
         try {
             jedis = pool.getResource();
@@ -650,7 +588,7 @@ public  class JedisUtil
      * @return 返回list的value个数
      */
     public static Long lpush(String key ,String...strs){
-        Jedis jedis = null;
+        ShardedJedis jedis = null;
         Long res = null;
         try {
             jedis = pool.getResource();
@@ -671,7 +609,7 @@ public  class JedisUtil
      * @return 返回list的value个数
      */
     public static Long rpush(String key ,String...strs){
-        Jedis jedis = null;
+        ShardedJedis jedis = null;
         Long res = null;
         try {
             jedis = pool.getResource();
@@ -695,7 +633,7 @@ public  class JedisUtil
      */
     public static Long linsert(String key, LIST_POSITION where,
                         String pivot, String value){
-        Jedis jedis = null;
+        ShardedJedis jedis = null;
         Long res = null;
         try {
             jedis = pool.getResource();
@@ -718,7 +656,7 @@ public  class JedisUtil
      * @return 成功返回OK
      */
     public static String lset(String key ,Long index, String value){
-        Jedis jedis = null;
+        ShardedJedis jedis = null;
         String res = null;
         try {
             jedis = pool.getResource();
@@ -740,7 +678,7 @@ public  class JedisUtil
      * @return 返回被删除的个数
      */
     public static Long lrem(String key,long count,String value){
-        Jedis jedis = null;
+        ShardedJedis jedis = null;
         Long res = null;
         try {
             jedis = pool.getResource();
@@ -762,7 +700,7 @@ public  class JedisUtil
      * @return 成功返回OK
      */
     public static String ltrim(String key ,long start ,long end){
-        Jedis jedis = null;
+        ShardedJedis jedis = null;
         String res = null;
         try {
             jedis = pool.getResource();
@@ -782,7 +720,7 @@ public  class JedisUtil
      * @return
      */
     synchronized public static String lpop(String key){
-        Jedis jedis = null;
+        ShardedJedis jedis = null;
         String res = null;
         try {
             jedis = pool.getResource();
@@ -802,7 +740,7 @@ public  class JedisUtil
      * @return
      */
     synchronized public static String rpop(String key){
-        Jedis jedis = null;
+        ShardedJedis jedis = null;
         String res = null;
         try {
             jedis = pool.getResource();
@@ -816,27 +754,6 @@ public  class JedisUtil
         return res;
     }
 
-    /**
-     * <p>通过key从一个list的尾部删除一个value并添加到另一个list的头部,并返回该value</p>
-     * <p>如果第一个list为空或者不存在则返回null</p>
-     * @param srckey
-     * @param dstkey
-     * @return
-     */
-    public static String rpoplpush(String srckey, String dstkey){
-        Jedis jedis = null;
-        String res = null;
-        try {
-            jedis = pool.getResource();
-            res = jedis.rpoplpush(srckey, dstkey);
-        } catch (Exception e) {
-
-            log.error(e.getMessage(),e);
-        } finally {
-            jedis.close();
-        }
-        return res;
-    }
 
     /**
      * <p>通过key获取list中指定下标位置的value</p>
@@ -845,7 +762,7 @@ public  class JedisUtil
      * @return 如果没有返回null
      */
     public static String lindex(String key,long index){
-        Jedis jedis = null;
+        ShardedJedis jedis = null;
         String res = null;
         try {
             jedis = pool.getResource();
@@ -865,7 +782,7 @@ public  class JedisUtil
      * @return
      */
     public static Long llen(String key){
-        Jedis jedis = null;
+        ShardedJedis jedis = null;
         Long res = null;
         try {
             jedis = pool.getResource();
@@ -888,7 +805,7 @@ public  class JedisUtil
      * @return
      */
     public static List<String> lrange(String key,long start,long end){
-        Jedis jedis = null;
+        ShardedJedis jedis = null;
         List<String> res = null;
         try {
             jedis = pool.getResource();
@@ -909,7 +826,7 @@ public  class JedisUtil
      * @return 添加成功的个数
      */
     public static Long sadd(String key,String...members){
-        Jedis jedis = null;
+        ShardedJedis jedis = null;
         Long res = null;
         try {
             jedis = pool.getResource();
@@ -930,7 +847,7 @@ public  class JedisUtil
      * @return 删除的个数
      */
     public static Long srem(String key,String...members){
-        Jedis jedis = null;
+        ShardedJedis jedis = null;
         Long res = null;
         try {
             jedis = pool.getResource();
@@ -950,7 +867,7 @@ public  class JedisUtil
      * @return
      */
     public static String spop(String key){
-        Jedis jedis = null;
+        ShardedJedis jedis = null;
         String res = null;
         try {
             jedis = pool.getResource();
@@ -964,152 +881,9 @@ public  class JedisUtil
         return res;
     }
 
-    /**
-     * <p>通过key获取set中的差集</p>
-     * <p>以第一个set为标准</p>
-     * @param keys 可以使一个string 则返回set中所有的value 也可以是string数组
-     * @return
-     */
-    public static Set<String> sdiff(String...keys){
-        Jedis jedis = null;
-        Set<String> res = null;
-        try {
-            jedis = pool.getResource();
-            res = jedis.sdiff(keys);
-        } catch (Exception e) {
 
-            log.error(e.getMessage(),e);
-        } finally {
-            jedis.close();
-        }
-        return res;
-    }
 
-    /**
-     * <p>通过key获取set中的差集并存入到另一个key中</p>
-     * <p>以第一个set为标准</p>
-     * @param dstkey 差集存入的key
-     * @param keys 可以使一个string 则返回set中所有的value 也可以是string数组
-     * @return
-     */
-    public static Long sdiffstore(String dstkey,String... keys){
-        Jedis jedis = null;
-        Long res = null;
-        try {
-            jedis = pool.getResource();
-            res = jedis.sdiffstore(dstkey, keys);
-        } catch (Exception e) {
 
-            log.error(e.getMessage(),e);
-        } finally {
-            jedis.close();
-        }
-        return res;
-    }
-
-    /**
-     * <p>通过key获取指定set中的交集</p>
-     * @param keys 可以使一个string 也可以是一个string数组
-     * @return
-     */
-    public static Set<String> sinter(String...keys){
-        Jedis jedis = null;
-        Set<String> res = null;
-        try {
-            jedis = pool.getResource();
-            res = jedis.sinter(keys);
-        } catch (Exception e) {
-
-            log.error(e.getMessage(),e);
-        } finally {
-            jedis.close();
-        }
-        return res;
-    }
-
-    /**
-     * <p>通过key获取指定set中的交集 并将结果存入新的set中</p>
-     * @param dstkey
-     * @param keys 可以使一个string 也可以是一个string数组
-     * @return
-     */
-    public static Long sinterstore(String dstkey,String...keys){
-        Jedis jedis = null;
-        Long res = null;
-        try {
-            jedis = pool.getResource();
-            res = jedis.sinterstore(dstkey, keys);
-        } catch (Exception e) {
-
-            log.error(e.getMessage(),e);
-        } finally {
-            jedis.close();
-        }
-        return res;
-    }
-
-    /**
-     * <p>通过key返回所有set的并集</p>
-     * @param keys 可以使一个string 也可以是一个string数组
-     * @return
-     */
-    public static Set<String> sunion(String... keys){
-        Jedis jedis = null;
-        Set<String> res = null;
-        try {
-            jedis = pool.getResource();
-            res = jedis.sunion(keys);
-        } catch (Exception e) {
-
-            log.error(e.getMessage(),e);
-        } finally {
-            jedis.close();
-        }
-        return res;
-    }
-
-    /**
-     * <p>通过key返回所有set的并集,并存入到新的set中</p>
-     * @param dstkey
-     * @param keys 可以使一个string 也可以是一个string数组
-     * @return
-     */
-    public static Long sunionstore(String dstkey,String...keys){
-        Jedis jedis = null;
-        Long res = null;
-        try {
-            jedis = pool.getResource();
-            res = jedis.sunionstore(dstkey, keys);
-        } catch (Exception e) {
-
-            log.error(e.getMessage(),e);
-        } finally {
-            jedis.close();
-        }
-        return res;
-    }
-
-    /**
-     * <p>通过key将set中的value移除并添加到第二个set中</p>
-     * @param srckey 需要移除的
-     * @param dstkey 添加的
-     * @param member set中的value
-     * @return
-     */
-    public static Long smove(String srckey, String dstkey, String member){
-        Jedis jedis = null;
-        Long res = null;
-        try {
-            jedis = pool.getResource();
-            res = jedis.smove(srckey, dstkey, member);
-        } catch (Exception e) {
-
-            log.error(e.getMessage(),e);
-        } finally {
-            jedis.close();
-        }
-        return res;
-    }
 
     /**
      * <p>通过key获取set中value的个数</p>
@@ -1117,7 +891,7 @@ public  class JedisUtil
      * @return
      */
     public static Long scard(String key){
-        Jedis jedis = null;
+        ShardedJedis jedis = null;
         Long res = null;
         try {
             jedis = pool.getResource();
@@ -1138,7 +912,7 @@ public  class JedisUtil
      * @return
      */
     public static Boolean sismember(String key,String member){
-        Jedis jedis = null;
+        ShardedJedis jedis = null;
         Boolean res = null;
         try {
             jedis = pool.getResource();
@@ -1158,7 +932,7 @@ public  class JedisUtil
      * @return
      */
     public static String srandmember(String key){
-        Jedis jedis = null;
+        ShardedJedis jedis = null;
         String res = null;
         try {
             jedis = pool.getResource();
@@ -1178,7 +952,7 @@ public  class JedisUtil
      * @return
      */
     public static Set<String> smembers(String key){
-        Jedis jedis = null;
+        ShardedJedis jedis = null;
         Set<String> res = null;
         try {
             jedis = pool.getResource();
@@ -1202,7 +976,7 @@ public  class JedisUtil
      * @return
      */
     public static Long zadd(String key,double score,String member){
-        Jedis jedis = null;
+        ShardedJedis jedis = null;
         Long res = null;
         try {
             jedis = pool.getResource();
@@ -1223,7 +997,7 @@ public  class JedisUtil
      * @return
      */
     public static Long zrem(String key,String...members){
-        Jedis jedis = null;
+        ShardedJedis jedis = null;
         Long res = null;
         try {
             jedis = pool.getResource();
@@ -1245,7 +1019,7 @@ public  class JedisUtil
      * @return
      */
     public static Double zincrby(String key ,double score ,String member){
-        Jedis jedis = null;
+        ShardedJedis jedis = null;
         Double res = null;
         try {
             jedis = pool.getResource();
@@ -1267,7 +1041,7 @@ public  class JedisUtil
      * @return
      */
     public static Long zrank(String key,String member){
-        Jedis jedis = null;
+        ShardedJedis jedis = null;
         Long res = null;
         try {
             jedis = pool.getResource();
@@ -1289,7 +1063,7 @@ public  class JedisUtil
      * @return
      */
     public static Long zrevrank(String key,String member){
-        Jedis jedis = null;
+        ShardedJedis jedis = null;
         Long res = null;
         try {
             jedis = pool.getResource();
@@ -1313,7 +1087,7 @@ public  class JedisUtil
      * @return
      */
     public static Set<String> zrevrange(String key ,long start ,long end){
-        Jedis jedis = null;
+        ShardedJedis jedis = null;
         Set<String> res = null;
         try {
             jedis = pool.getResource();
@@ -1335,7 +1109,7 @@ public  class JedisUtil
      * @return
      */
     public static Set<String> zrangebyscore(String key,String max,String min){
-        Jedis jedis = null;
+        ShardedJedis jedis = null;
         Set<String> res = null;
         try {
             jedis = pool.getResource();
@@ -1357,7 +1131,7 @@ public  class JedisUtil
      * @return
      */
     public static Set<String> zrangeByScore(String key ,double max,double min){
-        Jedis jedis = null;
+        ShardedJedis jedis = null;
         Set<String> res = null;
         try {
             jedis = pool.getResource();
@@ -1379,7 +1153,7 @@ public  class JedisUtil
      * @return
      */
     public static Long zcount(String key,String min,String max){
-        Jedis jedis = null;
+        ShardedJedis jedis = null;
         Long res = null;
         try {
             jedis = pool.getResource();
@@ -1399,7 +1173,7 @@ public  class JedisUtil
      * @return
      */
     public static Long zcard(String key){
-        Jedis jedis = null;
+        ShardedJedis jedis = null;
         Long res = null;
         try {
             jedis = pool.getResource();
@@ -1420,7 +1194,7 @@ public  class JedisUtil
      * @return
      */
     public static Double zscore(String key,String member){
-        Jedis jedis = null;
+        ShardedJedis jedis = null;
         Double res = null;
         try {
             jedis = pool.getResource();
@@ -1442,7 +1216,7 @@ public  class JedisUtil
      * @return
      */
     public static Long zremrangeByRank(String key ,long start, long end){
-        Jedis jedis = null;
+        ShardedJedis jedis = null;
         Long res = null;
         try {
             jedis = pool.getResource();
@@ -1464,7 +1238,7 @@ public  class JedisUtil
      * @return
      */
     public static Long zremrangeByScore(String key,double start,double end){
-        Jedis jedis = null;
+        ShardedJedis jedis = null;
         Long res = null;
         try {
             jedis = pool.getResource();
@@ -1484,12 +1258,12 @@ public  class JedisUtil
      * @param pattern
      * @return
      */
-    public static Set<String> keys(String pattern){
-        Jedis jedis = null;
-        Set<String> res = null;
+    public static String keys(String pattern){
+        ShardedJedis jedis = null;
+        String res = null;
         try {
             jedis = pool.getResource();
-            res = jedis.keys(pattern);
+            res = jedis.getKeyTag(pattern);
         } catch (Exception e) {
 
             log.error(e.getMessage(),e);
@@ -1505,7 +1279,7 @@ public  class JedisUtil
      * @return
      */
     public static String type(String key){
-        Jedis jedis = null;
+        ShardedJedis jedis = null;
         String res = null;
         try {
             jedis = pool.getResource();
@@ -1518,5 +1292,4 @@ public  class JedisUtil
         }
         return res;
     }
-
 }

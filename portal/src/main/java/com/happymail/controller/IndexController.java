@@ -35,7 +35,7 @@ import lombok.extern.log4j.Log4j2;
 @Setter
 public class IndexController
 {
-	@Resource(name="userServiceTest")
+	@Resource(name="userService")
 	private IUserService userService;
 	@RequestMapping("/")
 	@ResponseBody

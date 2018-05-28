@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+<bean id="redisHttpSessionConfiguration" class="org.springframework.session.data.redis.config.annotation.web.http.RedisHttpSessionConfiguration">
+<property name="maxInactiveIntervalInSeconds" value="600"/>
+</bean>
+<!-- redis config -->
+<bean id="jedisPoolConfig" class="redis.clients.jedis.JedisPoolConfig" scope="singleton">
+    <property name="maxTotal" value="1000" />
+    <property name="maxIdle" value="100" />
+    <property name="minIdle" value="50"/>
+    <property name="maxWaitMillis" value="1000"/>
+    <property name="testOnBorrow" value="true"/>
+    <property name="testOnReturn" value="false"/>
+    <property name="timeBetweenEvictionRunsMillis" value="3000"/>
+    <property name="testWhileIdle" value="true"/>
+    <property name="numTestsPerEvictionRun" value="50"/>
+</bean>
+
+<!-- jedisConnectionFactory只支持单个JedisShardInfo 要想使用分布式不能这样 -->
+<bean id="shardInfo" class="redis.clients.jedis.JedisShardInfo">
+<constructor-arg name="host" value="127.0.0.1"/>
+<constructor-arg name="port" value="6379"/>
+</bean>
+
+<bean id="jedisConnectionFactory" class="org.springframework.data.redis.connection.jedis.JedisConnectionFactory">
+<property name="poolConfig" ref="jedisPoolConfig"/><!-- 连接池配置 -->
+<property name="shardInfo" ref="shardInfo"/>
+<property name="timeout" value="2000"/>
+</bean>
+</beans>

@@ -33,7 +33,15 @@
   <servlet-name>springDispatcher</servlet-name>
   <url-pattern>/</url-pattern>
   </servlet-mapping> 
-  
+  <!-- spring-session filter 必须放第一个 -->
+  <filter>
+    <filter-name>springSessionRepositoryFilter</filter-name>
+    <filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
+</filter>
+<filter-mapping>
+    <filter-name>springSessionRepositoryFilter</filter-name>
+    <url-pattern>/*</url-pattern>
+</filter-mapping>
    <!-- spring编码过滤器，解决中文乱码 -->
   <filter>
   <filter-name>characterEncodingFilter</filter-name>

@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.happymail.common.bean.User;
+import com.happymail.common.util.EncryptUtil;
 import com.happymail.dao.UserDao;
 import com.happymail.serviceinter.IUserService;
 
@@ -120,6 +121,7 @@ public class UserService implements IUserService
 		User result=null;
 		try
 		{
+			user.setPassword(EncryptUtil.encodedByMD5(user.getPassword()));
 			List<User> users=userDao.selectByCondition(user);
 			if(users==null||users.size()==0)
 			{

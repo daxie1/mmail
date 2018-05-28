@@ -35,7 +35,7 @@ import lombok.extern.log4j.Log4j2;
 @Setter
 public class IndexController
 {
-	@Resource(name="userService")
+	@Resource(name="userServiceTest")
 	private IUserService userService;
 	@RequestMapping("/")
 	@ResponseBody
@@ -61,7 +61,7 @@ public class IndexController
 			//验证登录
 			User user=new User();
 			user.setUsername(username);
-			user.setPassword(EncryptUtil.encodedByMD5(password));
+			user.setPassword(password);//加密应该放在Service实现里面
 			user=userService.validateLogin(user);
 			if(user==null)
 			{

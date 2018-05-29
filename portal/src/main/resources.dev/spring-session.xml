@@ -17,16 +17,24 @@
     <property name="testWhileIdle" value="true"/>
     <property name="numTestsPerEvictionRun" value="50"/>
 </bean>
-
-<!-- jedisConnectionFactory只支持单个JedisShardInfo 要想使用分布式不能这样 -->
+<!-- 配置默认的cookie -->
+<bean id="defaultCookieSerializer" class="org.springframework.session.web.http.DefaultCookieSerializer">
+<property name="domainName" value="www.happymail.com"/><!-- 使用域名访问必须配置 -->
+<property name="cookiePath" value="/"/>
+<property name="cookieMaxAge" value="1800"/>
+<property name="cookieName" value="session_user"/>
+</bean>
+<!-- jedisConnectionFactory只支持单个JedisShardInfo 要想使用分布式不能这样（session服务器一般情况下单个够用） -->
 <bean id="shardInfo" class="redis.clients.jedis.JedisShardInfo">
 <constructor-arg name="host" value="127.0.0.1"/>
 <constructor-arg name="port" value="6379"/>
+<!-- <constructor-arg name="timeout" value="1800"/>redis过期时间 -->
 </bean>
 
 <bean id="jedisConnectionFactory" class="org.springframework.data.redis.connection.jedis.JedisConnectionFactory">
 <property name="poolConfig" ref="jedisPoolConfig"/><!-- 连接池配置 -->
 <property name="shardInfo" ref="shardInfo"/>
-<property name="timeout" value="2000"/>
+<property name="timeout" value="3000"/>
+<property name="usePool" value="true"/>
 </bean>
 </beans>

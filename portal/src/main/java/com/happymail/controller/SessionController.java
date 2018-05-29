@@ -23,12 +23,9 @@ public class SessionController
 		if(userJson!=null)
 		{
 			user=JsonUtil.ToObject(userJson.toString(),User.class);
-//			model.addObject("name", user.getUsername());
-//			model.addObject("password",user.getPassword());
 			model.addAttribute("username", user.getUsername());
 			model.addAttribute("password",user.getPassword());
-		}
-		
+		}		
 		return "sindex";
 	}
 	@RequestMapping("/login")

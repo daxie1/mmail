@@ -21,6 +21,7 @@ import com.happymail.common.util.CookieUtil;
 import com.happymail.common.util.EncryptUtil;
 import com.happymail.common.util.JedisUtil;
 import com.happymail.common.util.JsonUtil;
+import com.happymail.common.util.ResponseCode;
 import com.happymail.common.util.ServiceResponse;
 import com.happymail.common.util.ValidationUtil;
 import com.happymail.serviceinter.IUserService;
@@ -51,9 +52,8 @@ public class IndexController
 	}
 	@RequestMapping(value="/doLogin",method= {RequestMethod.POST})
 	@ResponseBody
-	public ServiceResponse doLogin(@RequestParam("username")String username,@RequestParam("password")String password,HttpServletRequest request,HttpServletResponse response)
+	public ServiceResponse<User> doLogin(@RequestParam("username")String username,@RequestParam("password")String password,HttpServletRequest request,HttpServletResponse response)
 	{
-		ServiceResponse serviceResponse=new ServiceResponse();
 		Cookie cookie=CookieUtil.getCookie(request, Config.UserConfig.USER_COOKIE_KEY);
 		String sessionid=null;
 		if(cookie==null)
@@ -65,46 +65,36 @@ public class IndexController
 			user=userService.validateLogin(user);
 			if(user==null)
 			{
-				serviceResponse.setResult(false);
-				serviceResponse.setMessage("用户并不存在,请重新登录");
-				return serviceResponse;
+				return ServiceResponse.createByErrorCodeMessage(ResponseCode.ERROR.getCode(), "用户密码错误");
 			}
 			sessionid=request.getSession().getId();
 			CookieUtil.addCookie(response, Config.UserConfig.USER_COOKIE_KEY, sessionid);
 			JedisUtil.setex(sessionid, JsonUtil.ToJson(user), 60*30);//设置30分钟过期
-			serviceResponse.setResult(true);
-			serviceResponse.setMessage("登录成功,User:"+user);
+			return ServiceResponse.createBySuccessMessage("登录成功");
 		}else
 		{
 			sessionid=cookie.getValue();
 			User user=JsonUtil.ToObject(JedisUtil.get(sessionid), User.class);
-			serviceResponse.setResult(true);
-			serviceResponse.setMessage("已经登录,User:"+user);
+			return ServiceResponse.createBySuccess("已经登录",user);
 		}
-		return serviceResponse;
 	}
 	
 	@RequestMapping(value="/register",method= {RequestMethod.POST})
 	@ResponseBody
-	public ServiceResponse registerUser(@Valid @RequestBody User user,BindingResult errors)
+	public ServiceResponse<User> registerUser(@Valid @RequestBody User user,BindingResult errors)
 	{
-		ServiceResponse serviceResponse=new ServiceResponse();
 		String validMsg=ValidationUtil.getFirstFieldErrorMsg(errors);//验证传入参数
 		if(validMsg!=null)
 		{
-			serviceResponse.setResult(false);
-			serviceResponse.setMessage(validMsg);
-			return serviceResponse;
+			return ServiceResponse.createByErrorCodeMessage(ResponseCode.ERROR.getCode(),validMsg);
 		}
 		user.setPassword(EncryptUtil.encodedByMD5(user.getPassword()));//密码加密
 		String errMsg=userService.resigter(user);
 		if(errMsg==null)
 		{
-			serviceResponse.setResult(true);
+			return ServiceResponse.createBySuccess();
 		}else {
-			serviceResponse.setResult(false);
-			serviceResponse.setMessage(errMsg);
+			return ServiceResponse.createByErrorMessage(errMsg);
 		}
-		return serviceResponse;
 	}
 }

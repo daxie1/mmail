@@ -1518,5 +1518,27 @@ public  class JedisUtil
         }
         return res;
     }
+    /**
+     * 设置key的有效期
+     * @param key 
+     * @param seconds 时间（秒）
+     * @return
+     */
+    public static long expire(String key,int seconds)
+    {
+    	Jedis jedis = null;
+    	long res=0;
+    	try
+		{
+			jedis=pool.getResource();
+			res=jedis.expire(key, seconds);
+		} catch (Exception e)
+		{
+			log.error(e.getMessage(),e);
+		}finally {
+			jedis.close();
+		}
+    	return res;
+    }
 
 }

@@ -28,22 +28,22 @@ public class ParamVaildateInterceptor implements HandlerInterceptor
 	@Override
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception
 	{
-		HandlerMethod handlerMethod = (HandlerMethod)handler;
-		MethodParameter[] parameters=handlerMethod.getMethodParameters();
-		for(MethodParameter parameter:parameters)
-		{
-			if(parameter.getParameterType()==BindingResult.class)
-			{
-				log.info("test ok");
-				//String[] value=request.getParameterValues(parameter.getParameterName());
-				//log.info(parameter.);
-				Enumeration<String> enu=request.getParameterNames();
-				while(enu.hasMoreElements())
-				{
-					log.info(enu.nextElement());
-				}
-			}
-		}
+//		HandlerMethod handlerMethod = (HandlerMethod)handler;
+//		MethodParameter[] parameters=handlerMethod.getMethodParameters();
+//		for(MethodParameter parameter:parameters)
+//		{
+//			if(parameter.getParameterType()==BindingResult.class)
+//			{
+//				log.info("test ok");
+//				//String[] value=request.getParameterValues(parameter.getParameterName());
+//				//log.info(parameter.);
+//				Enumeration<String> enu=request.getParameterNames();
+//				while(enu.hasMoreElements())
+//				{
+//					log.info(enu.nextElement());
+//				}
+//			}
+//		}
 		return false;
 	}
 	

@@ -1,7 +1,9 @@
 package com.happymail.service.impl;
 
+import java.util.Date;
 import java.util.List;
 
+import org.apache.commons.lang3.time.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -159,6 +161,12 @@ public class UserService implements IUserService
 			log.error("register user:{}  error:{}", user,e.getMessage(),e);
 		}
 		return errMsg;
+	}
+
+	@Override
+	public void closeUserInfo(int hour)
+	{
+		Date colseDate= DateUtils.addHours(new Date(), -hour);//apache的DateUtil也很好用
 	}
 
 }

@@ -86,4 +86,11 @@ public class UserServiceTest implements IUserService
 		return null;
 	}
 
+	@Override
+	public void closeUserInfo(int hour)
+	{
+		// TODO Auto-generated method stub
+		
+	}
+
 }

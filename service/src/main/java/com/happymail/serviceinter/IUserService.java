@@ -16,4 +16,9 @@ public interface IUserService extends IBaseService<User>
 	 * @return 成功返回null 失败返回错误信息
 	 */
 	String resigter(User user);
+	/**
+	 * 定时任务，x小时后执行
+	 * @param hour
+	 */
+	void closeUserInfo(int hour);
 }

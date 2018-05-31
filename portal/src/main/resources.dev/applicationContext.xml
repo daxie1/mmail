@@ -28,4 +28,5 @@
 <import resource="spring-dao.xml"/> 
 
 <!-- <import resource="spring-session.xml"/> -->
+<import resource="spring-redisson.xml"/>
 </beans>

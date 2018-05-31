@@ -13,7 +13,7 @@ import lombok.extern.log4j.Log4j2;
  * @author Administrator
  *
  */
-@Component
+//@Component
 @Aspect
 @Log4j2
 public class ControllerAspect

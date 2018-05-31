@@ -169,11 +169,5 @@ public class UserService implements IUserService
 		Date colseDate= DateUtils.addHours(new Date(), -hour);//apache的DateUtil也很好用
 	}
 
-	@Override
-	public void test()
-	{
-		log.error("service test run");
-		
-	}
 
 }

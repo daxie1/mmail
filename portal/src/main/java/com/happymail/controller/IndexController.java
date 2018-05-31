@@ -42,7 +42,6 @@ public class IndexController
 	@ResponseBody
 	public String index()
 	{
-		userService.test();
 		return "hello world";
 	}
 	

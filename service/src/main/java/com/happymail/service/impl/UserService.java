@@ -24,7 +24,7 @@ import lombok.extern.log4j.Log4j2;
 @Log4j2
 public class UserService implements IUserService
 {
-	@Autowired
+	//@Autowired
 	private UserDao userDao;
 	@Override
 	public User getById(Object key)
@@ -167,6 +167,13 @@ public class UserService implements IUserService
 	public void closeUserInfo(int hour)
 	{
 		Date colseDate= DateUtils.addHours(new Date(), -hour);//apache的DateUtil也很好用
+	}
+
+	@Override
+	public void test()
+	{
+		log.error("service test run");
+		
 	}
 
 }

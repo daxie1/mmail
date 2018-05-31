@@ -42,6 +42,7 @@ public class IndexController
 	@ResponseBody
 	public String index()
 	{
+		userService.test();
 		return "hello world";
 	}
 	
@@ -96,5 +97,11 @@ public class IndexController
 		}else {
 			return ServiceResponse.createByErrorMessage(errMsg);
 		}
+	}
+	@RequestMapping(value="/valid")
+	@ResponseBody
+	public ServiceResponse userValid()
+	{
+		return ServiceResponse.createBySuccessMessage("成功");
 	}
 }

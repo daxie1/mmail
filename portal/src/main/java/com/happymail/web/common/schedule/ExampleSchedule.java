@@ -15,7 +15,7 @@ import lombok.extern.log4j.Log4j2;
  * @author yu
  *
  */
-@Component
+//@Component
 @Log4j2
 public class ExampleSchedule
 {

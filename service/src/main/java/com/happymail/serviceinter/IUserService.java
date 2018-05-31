@@ -21,4 +21,5 @@ public interface IUserService extends IBaseService<User>
 	 * @param hour
 	 */
 	void closeUserInfo(int hour);
+	void test();
 }
